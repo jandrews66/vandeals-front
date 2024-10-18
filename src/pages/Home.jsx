@@ -1,13 +1,17 @@
 import { useEffect, useState } from 'react'
 import GetUserLocation from '../components/GetUserLocation.jsx'
 import { getDistance } from 'geolib';
-
+import DayPicker from '../components/DayPicker.jsx'
 
 export default function Home(){
     const [deals, setDeals] = useState([])
     const [selectedTypes, setSelectedTypes] = useState(["All-Day", "Happy-Hour", "Brunch", "Lunch", "Dinner"])
     const types = ["All-Day", "Happy-Hour", "Brunch", "Lunch", "Dinner"]
     const [userLocation, setUserLocation] = useState();
+    const daysOfWeek = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+    const date = new Date();
+    const today = daysOfWeek[date.getDay()];
+    const [selectedDay, setSelectedDay] = useState(today)
 
     useEffect(() => {
         GetUserLocation(setUserLocation);
@@ -16,7 +20,7 @@ export default function Home(){
     useEffect(() => {
         if (selectedTypes.length > 0 && userLocation){
             const typesQuery = selectedTypes.join(',');
-            fetch(`http://localhost:3000/deal/todays?types=${typesQuery}&location=${userLocation}`)
+            fetch(`http://localhost:3000/deal/todays?types=${typesQuery}&location=${userLocation}&day=${selectedDay}`)
             .then((response) => response.json())
             .then((data) => {
                 setDeals(data)
@@ -29,7 +33,7 @@ export default function Home(){
             setDeals([]);
         }
 
-    }, [selectedTypes, userLocation]);
+    }, [selectedTypes, userLocation, selectedDay]);
 
     function handleCheck(type){
         setSelectedTypes((prevTypes) => {
@@ -55,9 +59,12 @@ export default function Home(){
         return 'Calcuating...'; // Return something while waiting for userLocation
     }
 
+
+
     return (
         <>
         <div>
+            <DayPicker selectedDay={selectedDay} setSelectedDay={setSelectedDay} daysOfWeek={daysOfWeek}/>
         </div>
         <div>
             <ul>
