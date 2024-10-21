@@ -4,11 +4,8 @@ export default function Header(){
     return (
         <header className="bg-gray-700 text-white p-4">
             <nav className="flex gap-2">
-                <Link to="/all-day">All Day</Link>
-                <Link to="/happy-hour">Happy Hour</Link>
-                <Link to="/brunch">Brunch</Link>
-                <Link to="/lunch">Lunch</Link>
-                <Link to="/dinner">Dinner</Link>
+                <Link to="/create">Add a Deal</Link>
+
 
             </nav>
         </header>

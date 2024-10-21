@@ -13,6 +13,7 @@ export default function Home(){
     const daysOfWeek = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
     const today = daysOfWeek[todayIndex];
     const [selectedDay, setSelectedDay] = useState({ day: today, index: 0 })
+    const [loading, setLoading] = useState(false)
 
     useEffect(() => {
         GetUserLocation(setUserLocation);
@@ -22,12 +23,12 @@ export default function Home(){
         if (selectedTypes.length > 0 && userLocation){
             const typesQuery = selectedTypes.join(',');
             const { day, index } = selectedDay;
-
+            setLoading(true)
             fetch(`http://localhost:3000/deal/todays?types=${typesQuery}&location=${userLocation}&day=${day}&index=${index}`)
             .then((response) => response.json())
             .then((data) => {
                 setDeals(data)
-                console.log(data)
+                setLoading(false)
             })
             .catch((error) => {
                 console.error(error)
@@ -66,39 +67,51 @@ export default function Home(){
 
     return (
         <>
-        <div>
-            <DayPicker selectedDay={selectedDay} setSelectedDay={setSelectedDay} daysOfWeek={daysOfWeek}/>
-        </div>
-        <div>
-            <ul>
-                {types.map((type, index) => (
-                    <li key={index}>
-                        <input 
-                            type="checkbox"
-                            name="type"
-                            checked={checkedInput(type)}
-                            onChange={()=>handleCheck(type)}
-                        >
-                        </input>
-                        <label>{type}</label>
-                    </li>
-                ))}
-            </ul>
-        </div>
-
-        <div className="space-y-4">
-            {deals.length > 0 && deals.map((deal) => (
-                <ul key={deal._id} className="p-4 bg-gray-100 rounded-lg shadow-md">
-                    <li className="font-semibold text-lg text-emerald-600">{deal.name}</li>
-                    <li className="font-semibold text-emerald-600">{deal.restaurant}</li>
-                    <li className="text-sm text-gray-600">Type: {deal.type}</li>
-                    <li className="text-sm text-gray-600">Description: {deal.description}</li>
-                    <li className="text-sm text-gray-600">Days: {deal.days.join(', ')}</li>
-                    <li className="text-sm text-gray-600">Distance: {calcDistance(deal.location.coordinates)}</li>
-
+        <div className="flex flex-col items-center px-10 py-4">
+            <div>
+                <DayPicker selectedDay={selectedDay} setSelectedDay={setSelectedDay} daysOfWeek={daysOfWeek}/>
+            </div>
+            <div>
+                <ul className="flex gap-2 py-2">
+                    {types.map((type, index) => (
+                        <li key={index}>
+                            <label className="mr-1 text-sm">{type}</label>
+                            <input 
+                                type="checkbox"
+                                name="type"
+                                checked={checkedInput(type)}
+                                onChange={()=>handleCheck(type)}
+                            >
+                            </input>
+                        </li>
+                    ))}
                 </ul>
-            ))}
+            </div>
+            <div className="">
+                {loading ? 
+                    <div className="text-center">Finding amazing deals...</div>
+                    :
+                    <div className="flex flex-col items-center space-y-4">
+                    {deals.length > 0 && deals.map((deal) => (
+                        <div key={deal._id} className="flex flex-col p-4 bg-gray-100 w-full rounded-lg shadow-md">
+                            <div className="flex gap-12 justify-between">
+                                <div className="font-semibold text-emerald-600">{deal.restaurant}</div>
+                                <div className="text-sm text-right text-gray-600">{calcDistance(deal.location.coordinates)}</div>
+
+                            </div>
+
+                            <div className="font-semibold text-gray-600">{deal.name}</div>
+                            <div className="p-2 text-sm text-gray-600">{deal.description}</div>
+
+                        </div>
+                    ))}
+                    </div>
+                }
+            </div>
+
         </div>
+       
+
         </>
 
     )
