@@ -8,10 +8,11 @@ export default function Home(){
     const [selectedTypes, setSelectedTypes] = useState(["All-Day", "Happy-Hour", "Brunch", "Lunch", "Dinner"])
     const types = ["All-Day", "Happy-Hour", "Brunch", "Lunch", "Dinner"]
     const [userLocation, setUserLocation] = useState();
+
+    const todayIndex = new Date().getDay();
     const daysOfWeek = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
-    const date = new Date();
-    const today = daysOfWeek[date.getDay()];
-    const [selectedDay, setSelectedDay] = useState(today)
+    const today = daysOfWeek[todayIndex];
+    const [selectedDay, setSelectedDay] = useState({ day: today, index: 0 })
 
     useEffect(() => {
         GetUserLocation(setUserLocation);
@@ -20,7 +21,9 @@ export default function Home(){
     useEffect(() => {
         if (selectedTypes.length > 0 && userLocation){
             const typesQuery = selectedTypes.join(',');
-            fetch(`http://localhost:3000/deal/todays?types=${typesQuery}&location=${userLocation}&day=${selectedDay}`)
+            const { day, index } = selectedDay;
+
+            fetch(`http://localhost:3000/deal/todays?types=${typesQuery}&location=${userLocation}&day=${day}&index=${index}`)
             .then((response) => response.json())
             .then((data) => {
                 setDeals(data)
