@@ -4,6 +4,8 @@ export default function GetUserLocation(setUserLocation){
         navigator.geolocation.getCurrentPosition(success, error);
       } else {
         console.log("Geolocation not supported");
+        setUserLocation(null)
+
       }
       
       function success(position) {
@@ -13,6 +15,7 @@ export default function GetUserLocation(setUserLocation){
       }
       
       function error() {
-        console.log("Unable to retrieve your location");
+        console.warn("User denied location access");
+        setUserLocation(null)
       }
 }

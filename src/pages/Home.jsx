@@ -7,24 +7,31 @@ export default function Home(){
     const [deals, setDeals] = useState([])
     const [selectedTypes, setSelectedTypes] = useState(["All-Day", "Happy-Hour", "Brunch", "Lunch", "Dinner"])
     const types = ["All-Day", "Happy-Hour", "Brunch", "Lunch", "Dinner"]
-    const [userLocation, setUserLocation] = useState();
+    const [userLocation, setUserLocation] = useState(null);
 
     const todayIndex = new Date().getDay();
     const daysOfWeek = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
     const today = daysOfWeek[todayIndex];
     const [selectedDay, setSelectedDay] = useState({ day: today, index: 0 })
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(null)
 
     useEffect(() => {
         GetUserLocation(setUserLocation);
     }, []);
 
     useEffect(() => {
-        if (selectedTypes.length > 0 && userLocation){
+        if (selectedTypes.length > 0){
+
+            setLoading(true)
+
             const typesQuery = selectedTypes.join(',');
             const { day, index } = selectedDay;
-            setLoading(true)
-            fetch(`http://localhost:3000/deal/todays?types=${typesQuery}&location=${userLocation}&day=${day}&index=${index}`)
+
+            const locationQuery = userLocation
+            ? `&location=${userLocation}` 
+            : '';
+
+            fetch(`http://localhost:3000/deal/todays?types=${typesQuery}${locationQuery}&day=${day}&index=${index}`)
             .then((response) => response.json())
             .then((data) => {
                 setDeals(data)
@@ -59,8 +66,9 @@ export default function Home(){
             const resultKms = (result / 1000).toFixed(1); 
 
             return `${resultKms} km away`; // Add units for better readability
-        }
-        return 'Calcuating...'; // Return something while waiting for userLocation
+        } else {
+            return '? km away'
+        }   
     }
 
 
