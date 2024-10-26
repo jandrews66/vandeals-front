@@ -4,7 +4,7 @@ import { format } from 'date-fns';
 
 export default function ViewDeal(){
     const { id } = useParams();
-    const [deal, setDeal] = useState(null); // Store the deal data
+    const [deal, setDeal] = useState(null); 
 
     useEffect(() => {
         fetch(`http://localhost:3000/deal/${id}`, {

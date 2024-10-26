@@ -6,6 +6,7 @@ import Layout from './components/Layout';
 import Home from './pages/Home.jsx'
 import CreateDeal from './pages/CreateDeal.jsx'
 import ViewDeal from './pages/ViewDeal.jsx'
+import AdminDash from './pages/AdminDash.jsx'
 
 const router = createBrowserRouter([
   {
@@ -23,6 +24,10 @@ const router = createBrowserRouter([
       {
         path: "/deals/:id",
         element: <ViewDeal />,
+      },
+      {
+        path: "/admin/dashboard",
+        element: <AdminDash />,
       },
     ],
   }

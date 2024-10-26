@@ -92,11 +92,6 @@ export default function CreateDeal(){
         },
       });
 
-/*       bounds: new window.google.maps.LatLngBounds(
-        new window.google.maps.LatLng(49.195423, -123.278808), // Southwest corner of Vancouver
-        new window.google.maps.LatLng(49.361304, -123.010890)  // Northeast corner of Vancouver
-    ),
- */
     return(
         <div>
             <form className="space-y-4 max-w-2xl mx-auto p-4 bg-white shadow-md rounded-md" onSubmit={handleSubmit}>
@@ -190,10 +185,17 @@ export default function CreateDeal(){
                                     type="checkbox"
                                     id={`checkbox-${index}`}
                                     name={day}
-                                    className="form-checkbox text-emerald-600"
+                                    className="form-checkbox hover:cursor-pointer"
                                     onChange={() => handleCheck(day)}
                                 />
-                                <label htmlFor={day} className="ml-2 text-gray-700">{day}</label>
+                                <label 
+                                    htmlFor={`checkbox-${index}`}
+                                    className="ml-2 text-gray-700 hover:cursor-pointer"
+                                    onClick={() => handleCheck(day)}
+
+                                >
+                                    {day}
+                                </label>
                             </li>
                         ))}
                     </ul>
