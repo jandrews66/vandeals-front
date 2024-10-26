@@ -5,6 +5,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Layout from './components/Layout';
 import Home from './pages/Home.jsx'
 import CreateDeal from './pages/CreateDeal.jsx'
+import ViewDeal from './pages/ViewDeal.jsx'
 
 const router = createBrowserRouter([
   {
@@ -19,7 +20,10 @@ const router = createBrowserRouter([
         path: "/create",
         element: <CreateDeal />,
       },
-
+      {
+        path: "/deals/:id",
+        element: <ViewDeal />,
+      },
     ],
   }
 

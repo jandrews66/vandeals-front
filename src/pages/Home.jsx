@@ -1,9 +1,13 @@
 import { useEffect, useState } from 'react'
+import { useNavigate } from "react-router-dom";
+
 import GetUserLocation from '../components/GetUserLocation.jsx'
 import { getDistance } from 'geolib';
 import DayPicker from '../components/DayPicker.jsx'
+import Logo from '../components/Logo.jsx'
 
 export default function Home(){
+    const navigate = useNavigate();
     const [deals, setDeals] = useState([])
     const [selectedTypes, setSelectedTypes] = useState(["All-Day", "Happy-Hour", "Brunch", "Lunch", "Dinner"])
     const types = ["All-Day", "Happy-Hour", "Brunch", "Lunch", "Dinner"]
@@ -71,35 +75,17 @@ export default function Home(){
         }   
     }
 
+    function handleNavigate(id){
+        navigate(`/deals/${id}`)
+    }
 
 
     return (
         <>
         <div className="flex flex-col items-center px-10 py-2">
-        <div className="text-center my-10">
-            <div className="text-6xl font-black tracking-tighter uppercase 
-                text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-600 
-                drop-shadow-[4px_4px_0px_rgba(0,0,0,1)]"
-                style={{ fontFamily: "'Rubik', sans-serif" }}>
-                VANCOUVER
-            </div>
-            <div className="text-6xl font-black tracking-tighter uppercase 
-                text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-yellow-500 
-                drop-shadow-[4px_4px_0px_rgba(0,0,0,1)]"
-                style={{ fontFamily: "'Rubik', sans-serif" }}>
-                RESTAURANT
-            </div>
-            <div className="text-6xl font-black tracking-tighter uppercase 
-                text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-teal-500 
-                drop-shadow-[4px_4px_0px_rgba(0,0,0,1)]"
-                style={{ fontFamily: "'Rubik', sans-serif" }}>
-                DEALS
-            </div>
-        </div>
-            <div>
-                <DayPicker selectedDay={selectedDay} setSelectedDay={setSelectedDay} daysOfWeek={daysOfWeek}/>
-            </div>
-            <div>
+            <Logo />
+            <DayPicker selectedDay={selectedDay} setSelectedDay={setSelectedDay} daysOfWeek={daysOfWeek}/>
+            <div className="py-2">
                 <ul className="flex gap-2 py-2">
                     {types.map((type, index) => (
                         <li key={index}>
@@ -121,7 +107,11 @@ export default function Home(){
                     :
                     <div className="flex flex-col items-center space-y-4">
                     {deals.length > 0 && deals.map((deal) => (
-                        <div key={deal._id} className="flex flex-col p-4 bg-gray-100 w-full rounded-lg shadow-md">
+                        <div 
+                        key={deal._id} 
+                        className="flex flex-col p-4 bg-gray-100 w-full rounded-lg shadow-md hover:cursor-pointer"
+                        onClick={() => handleNavigate(deal._id)}
+                        >
                             <div className="flex gap-12 justify-between">
                                 <div className="font-semibold text-emerald-600">{deal.restaurant}</div>
                                 <div className="text-sm text-right text-gray-600">{calcDistance(deal.location.coordinates)}</div>
