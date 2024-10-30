@@ -1,6 +1,7 @@
 import { useState, } from 'react'
 import { usePlacesWidget } from "react-google-autocomplete";
-
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 export default function CreateDeal(){
     const googleKey = import.meta.env.VITE_GOOGLE_API_KEY
@@ -11,9 +12,11 @@ export default function CreateDeal(){
     const [description, setDescription] = useState('')
     const [startDate, setStartDate] = useState('')
     const [endDate, setEndDate] = useState('')
+    const [showStartDate, setShowStartDate] = useState(false);
+    const [showEndDate, setShowEndDate] = useState(false);
     const [days, setDays] = useState([])
     const [coords, setCoords] = useState([])
-    const [timePeriods, setTimePeriods] = useState([{ start: '', end: '' }]);
+    const [timePeriods, setTimePeriods] = useState([]);
     
     
     const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
@@ -203,56 +206,95 @@ export default function CreateDeal(){
                         <div key={index} className="flex gap-2 mb-2">
                             <div>
                                 <label className="block text-sm font-medium text-gray-700">Start Time:</label>
-                                <input
+{/*                                 <input
                                     type="time"
                                     onClick={(e) => e.target.showPicker()}
                                     value={period.start}
                                     onChange={(e) => handleTimeChange(index, 'start', e.target.value)}
                                     className="mt-1 block px-3 py-2 border border-gray-300 rounded-md shadow-sm"
 
-                                ></input>
+                                ></input> */}
+                                <DatePicker
+                                    selected={period.start ? new Date(`1970-01-01T${period.start}`) : new Date(`1970-01-01T12:00`)} //selected expects date object
+                                    onChange={(date) => handleTimeChange(index, 'start', date ? date.toTimeString().slice(0, 5) : '')} //trim to only use time from date object
+                                    showTimeSelect
+                                    showTimeSelectOnly
+                                    timeIntervals={15} // every 15 mins
+                                    dateFormat="HH:mm"
+                                    className="mt-1 block px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+                                />
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700">End Time:</label>
-                                <input
-                                    type="time"
-                                    onClick={(e) => e.target.showPicker()}
-                                    value={period.end}
-                                    onChange={(e) => handleTimeChange(index, 'end', e.target.value)}
+                                <DatePicker
+                                    selected={period.end ? new Date(`1970-01-01T${period.end}`) : new Date(`1970-01-01T17:00`)}
+                                    onChange={(date) => handleTimeChange(index, 'end', date ? date.toTimeString().slice(0, 5) : '')}
+                                    showTimeSelect
+                                    showTimeSelectOnly
+                                    timeIntervals={15} 
+                                    dateFormat="HH:mm"
                                     className="mt-1 block px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-
-                                ></input>
+                                />
                             </div>
                         </div>
                     ))}
                     <div className="flex flex-col gap-1">
-                        {timePeriods.length > 1 &&                  
-                            <button type="button" onClick={removeTimePeriod} className="text-blue-500 text-sm w-fit">
+                        {timePeriods.length > 0 &&                  
+                            <button type="button" onClick={removeTimePeriod} className="text-red-500 text-sm w-fit">
                                     - Remove Time Period
                             </button>
                         }
                         {timePeriods.length < 3 &&
                             <button type="button" onClick={addTimePeriod} className="text-blue-500 text-sm w-fit">
-                                + Add another Time Period
+                                + Add Time Period
                             </button>
 
                         }
-
                     </div>
 
                 </div>
-                <div className="flex gap-2">
-                    <div>
-                        <label htmlFor="startDate" className="block text-sm font-medium text-gray-700">Start Date:</label>
-                        <input
-                            type="date"
-                            id="startDate"
-                            onClick={(e) => e.target.showPicker()}
-                            className="mt-1 block px-3 py-2 border border-gray-300 rounded-md shadow-sm "
-                            onChange={(e) => setStartDate(e.target.value)}
-                        />
-                    </div>
-
+                <div className="">
+                    {!showStartDate && (
+                        <button
+                        onClick={() => setShowStartDate(true)}
+                        className="text-blue-500 text-sm w-fit"
+                        >
+                        + Add Start Date
+                        </button>
+                    )}
+                    {showStartDate && (
+                        <div>
+                            <label htmlFor="startDate" className="block text-sm font-medium text-gray-700">Start Date:</label>
+                            <input
+                                type="date"
+                                id="startDate"
+                                onClick={(e) => e.target.showPicker()}
+                                className="mt-1 block px-3 py-2 border border-gray-300 rounded-md shadow-sm "
+                                onChange={(e) => setStartDate(e.target.value)}
+                            />
+                            <button
+                            onClick={() => {
+                                setShowStartDate(false);
+                                setStartDate('');
+                                }}
+                            className="text-red-500 text-sm w-fit"
+                            >
+                            - Remove Start Date
+                            </button>
+                        </div>
+                        
+                    )}
+                </div>
+                <div>
+                    {!showEndDate && (
+                    <button
+                    onClick={() => setShowEndDate(true)}
+                    className="text-blue-500 text-sm w-fit"
+                    >
+                    + Add End Date
+                    </button>
+                    )}
+                    {showEndDate && (
                     <div>
                         <label htmlFor="endDate" className="block text-sm font-medium text-gray-700">End Date:</label>
                         <input
@@ -262,9 +304,18 @@ export default function CreateDeal(){
                             className="mt-1 block  px-3 py-2 border border-gray-300 rounded-md shadow-sm "
                             onChange={(e) => setEndDate(e.target.value)}
                         />
+                        <button
+                        onClick={() => {
+                            setShowEndDate(false);
+                            setEndDate('');
+                            }}
+                        className="text-red-500 text-sm w-fit"
+                        >
+                        - Remove End Date
+                        </button>
                     </div>
+                    )}
                 </div>
-
                 <button
                     type="submit"
                     className="w-full py-2 px-4 bg-emerald-600 text-white font-semibold rounded-md shadow-md hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
