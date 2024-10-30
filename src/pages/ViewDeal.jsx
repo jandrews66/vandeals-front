@@ -12,7 +12,10 @@ export default function ViewDeal(){
             dataType: 'json'
         })
         .then((response) => response.json())
-        .then((data) => setDeal(data))
+        .then((data) => {
+            setDeal(data)
+            console.log(data)
+        })
         .catch((error) => {
             console.error(error)
         });
@@ -49,15 +52,23 @@ export default function ViewDeal(){
                 </div>
                 <hr></hr>
                 <div className="py-4 text-xl font-semibold text-emerald-600">{deal.name}</div>
-        
                 <div className="pb-8 text-base text-gray-800 leading-relaxed">{deal.description}</div>
-        
                 <div className="pt-2 text-sm font-medium text-gray-600">
-                <span className="text-gray-800">Type:</span> {deal.type}
+                    Time Periods:
+                    {deal.time_periods.length > 0 && 
+                        deal.time_periods.map((period, index) => (
+                            <div key={index}>
+                                <div className="text-gray-800">{period.start} to {period.end}</div>
+                            </div>
+                        ))
+                    }
+                </div>
+                <div className="pt-2 text-sm font-medium text-gray-600">
+                    <span className="text-gray-800">Type:</span> {deal.type}
                 </div>
         
                 <div className="text-sm font-medium text-gray-600">
-                <span className="text-gray-800">Days:</span> {deal.days.join(', ')}
+                    <span className="text-gray-800">Days:</span> {deal.days.join(', ')}
                 </div>
         
                 <div className="text-sm font-medium text-gray-600">

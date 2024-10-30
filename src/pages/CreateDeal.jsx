@@ -1,6 +1,5 @@
-import { useState } from 'react'
+import { useState, } from 'react'
 import { usePlacesWidget } from "react-google-autocomplete";
-import { LoadScript } from '@react-google-maps/api';
 
 
 export default function CreateDeal(){
@@ -13,9 +12,12 @@ export default function CreateDeal(){
     const [startDate, setStartDate] = useState('')
     const [endDate, setEndDate] = useState('')
     const [days, setDays] = useState([])
-    const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
     const [coords, setCoords] = useState([])
+    const [timePeriods, setTimePeriods] = useState([{ start: '', end: '' }]);
     
+    
+    const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+
     const handleSubmit = async (e) => {
         e.preventDefault()
 
@@ -32,7 +34,8 @@ export default function CreateDeal(){
             start_date: startDate,
             end_date: endDate,
             days,
-            coords
+            coords,
+            time_periods: timePeriods
         }
         console.log(formData)
 
@@ -92,6 +95,21 @@ export default function CreateDeal(){
         },
       });
 
+        const addTimePeriod = () => {
+        setTimePeriods([...timePeriods, { start: '', end: '' }])
+        }
+
+        const handleTimeChange = (index, field, value) => {
+            const updatedPeriods = [...timePeriods];
+            updatedPeriods[index][field] = value;
+            setTimePeriods(updatedPeriods)
+        }
+
+        const removeTimePeriod = () => {
+            const updatedPeriods = timePeriods.slice(0, -1)
+            setTimePeriods(updatedPeriods)
+        }
+
     return(
         <div>
             <form className="space-y-4 max-w-2xl mx-auto p-4 bg-white shadow-md rounded-md" onSubmit={handleSubmit}>
@@ -122,24 +140,6 @@ export default function CreateDeal(){
                     />
                 </div>
                 <div>
-                    <label htmlFor="name" className="block text-sm font-medium text-gray-700">Deal Name:</label>
-                    <input
-                        type="text"
-                        id="name"
-                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-                        onChange={(e) => setName(e.target.value)}
-                    />
-                </div>
-                <div>
-                    <label htmlFor="description" className="block text-sm font-medium text-gray-700">Description:</label>
-                    <textarea
-                        id="description"
-                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-emerald-500 focus:border-emerald-500"
-                        onChange={(e) => setDescription(e.target.value)}
-                        >
-                    </textarea>
-                </div>
-                <div>
                     <label htmlFor="type" className="block text-sm font-medium text-gray-700">Deal Type:</label>
                     <select
                         id="type"
@@ -157,27 +157,25 @@ export default function CreateDeal(){
                     </select>
                 </div>
                 <div>
-                    <label htmlFor="startDate" className="block text-sm font-medium text-gray-700">Start Date:</label>
+                    <label htmlFor="name" className="block text-sm font-medium text-gray-700">Deal Name:</label>
                     <input
-                        type="date"
-                        id="startDate"
-                        className="mt-1 block w-fit-content px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-emerald-500 focus:border-emerald-500"
-                        onChange={(e) => setStartDate(e.target.value)}
+                        type="text"
+                        id="name"
+                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+                        onChange={(e) => setName(e.target.value)}
                     />
                 </div>
-
                 <div>
-                    <label htmlFor="endDate" className="block text-sm font-medium text-gray-700">End Date:</label>
-                    <input
-                        type="date"
-                        id="endDate"
-                        className="mt-1 block w-fit-content px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-emerald-500 focus:border-emerald-500"
-                        onChange={(e) => setEndDate(e.target.value)}
-                    />
+                    <label htmlFor="description" className="block text-sm font-medium text-gray-700">Description:</label>
+                    <textarea
+                        id="description"
+                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm "
+                        onChange={(e) => setDescription(e.target.value)}
+                        >
+                    </textarea>
                 </div>
-
                 <div>
-                    <label className="block text-sm font-medium text-gray-700">Days of the Week:</label>
+                    <label className="block text-sm font-medium text-gray-700">Valid On:</label>
                     <ul className="flex flex-wrap gap-4 mt-2">
                         {daysOfWeek.map((day, index) => (
                             <li key={index} className="flex items-center">
@@ -191,14 +189,80 @@ export default function CreateDeal(){
                                 <label 
                                     htmlFor={`checkbox-${index}`}
                                     className="ml-2 text-gray-700 hover:cursor-pointer"
-                                    onClick={() => handleCheck(day)}
-
                                 >
                                     {day}
                                 </label>
                             </li>
                         ))}
                     </ul>
+                </div>
+                <hr></hr>
+                <p className="block text pt-2  text-gray-700">Optional Settings:</p>
+                <div>
+                    {timePeriods.map((period, index) => (
+                        <div key={index} className="flex gap-2 mb-2">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">Start Time:</label>
+                                <input
+                                    type="time"
+                                    onClick={(e) => e.target.showPicker()}
+                                    value={period.start}
+                                    onChange={(e) => handleTimeChange(index, 'start', e.target.value)}
+                                    className="mt-1 block px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+
+                                ></input>
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">End Time:</label>
+                                <input
+                                    type="time"
+                                    onClick={(e) => e.target.showPicker()}
+                                    value={period.end}
+                                    onChange={(e) => handleTimeChange(index, 'end', e.target.value)}
+                                    className="mt-1 block px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+
+                                ></input>
+                            </div>
+                        </div>
+                    ))}
+                    <div className="flex flex-col gap-1">
+                        {timePeriods.length > 1 &&                  
+                            <button type="button" onClick={removeTimePeriod} className="text-blue-500 text-sm w-fit">
+                                    - Remove Time Period
+                            </button>
+                        }
+                        {timePeriods.length < 3 &&
+                            <button type="button" onClick={addTimePeriod} className="text-blue-500 text-sm w-fit">
+                                + Add another Time Period
+                            </button>
+
+                        }
+
+                    </div>
+
+                </div>
+                <div className="flex gap-2">
+                    <div>
+                        <label htmlFor="startDate" className="block text-sm font-medium text-gray-700">Start Date:</label>
+                        <input
+                            type="date"
+                            id="startDate"
+                            onClick={(e) => e.target.showPicker()}
+                            className="mt-1 block px-3 py-2 border border-gray-300 rounded-md shadow-sm "
+                            onChange={(e) => setStartDate(e.target.value)}
+                        />
+                    </div>
+
+                    <div>
+                        <label htmlFor="endDate" className="block text-sm font-medium text-gray-700">End Date:</label>
+                        <input
+                            type="date"
+                            id="endDate"
+                            onClick={(e) => e.target.showPicker()}
+                            className="mt-1 block  px-3 py-2 border border-gray-300 rounded-md shadow-sm "
+                            onChange={(e) => setEndDate(e.target.value)}
+                        />
+                    </div>
                 </div>
 
                 <button
