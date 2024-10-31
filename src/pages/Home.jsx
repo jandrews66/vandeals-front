@@ -18,6 +18,7 @@ export default function Home(){
     const today = daysOfWeek[todayIndex];
     const [selectedDay, setSelectedDay] = useState({ day: today, index: 0 })
     const [loading, setLoading] = useState(null)
+    const [limit, setLimit] = useState(5)
 
     useEffect(() => {
         GetUserLocation(setUserLocation);
@@ -30,12 +31,9 @@ export default function Home(){
 
             const typesQuery = selectedTypes.join(',');
             const { day, index } = selectedDay;
+            const locationQuery = userLocation ? `&location=${userLocation}` : '';
 
-            const locationQuery = userLocation
-            ? `&location=${userLocation}` 
-            : '';
-
-            fetch(`http://localhost:3000/deal/todays?types=${typesQuery}${locationQuery}&day=${day}&index=${index}`)
+            fetch(`http://localhost:3000/deal/todays?types=${typesQuery}${locationQuery}&day=${day}&index=${index}&limit=${limit}`)
             .then((response) => response.json())
             .then((data) => {
                 setDeals(data)
@@ -48,7 +46,7 @@ export default function Home(){
             setDeals([]);
         }
 
-    }, [selectedTypes, userLocation, selectedDay]);
+    }, [selectedTypes, userLocation, selectedDay, limit]);
 
     function handleCheck(type){
         setSelectedTypes((prevTypes) => {
@@ -77,6 +75,10 @@ export default function Home(){
 
     function handleNavigate(id){
         navigate(`/deals/${id}`)
+    }
+
+    function getDirections(name, address){
+        window.open(`https://maps.google.com?q=${name}, ${address}` );
     }
 
 
@@ -109,12 +111,17 @@ export default function Home(){
                     {deals.length > 0 && deals.map((deal) => (
                         <div 
                         key={deal._id} 
-                        className="flex flex-col p-4 bg-gray-100 w-full rounded-lg shadow-md hover:cursor-pointer"
+                        className="flex flex-col p-4 bg-gray-50 w-full border-2 rounded border-gray-700 shadow-md hover:cursor-pointer"
                         onClick={() => handleNavigate(deal._id)}
                         >
                             <div className="flex gap-12 justify-between">
-                                <div className="font-semibold text-emerald-600">{deal.restaurant}</div>
-                                <div className="text-sm text-right text-gray-600">{calcDistance(deal.location.coordinates)}</div>
+                                <div className="font-semibold text-teal-600">{deal.restaurant}</div>
+                                <div 
+                                    className="text-sm text-right text-blue-600 hover:underline"
+                                    onClick={() => getDirections(deal.restaurant, deal.address)}
+                                    >
+                                        {calcDistance(deal.location.coordinates)}
+                                </div>
 
                             </div>
 
@@ -126,7 +133,9 @@ export default function Home(){
                     </div>
                 }
             </div>
-
+            {deals.length >= limit &&
+                <button className="m-4 py-2 px-4 border-2 rounded border-gray-700 bg-blue-400 hover:bg-pink-400 text-gray-800 text-sm font-semibold" onClick={()=> setLimit(limit + limit)}>Show More</button>
+            }
         </div>
        
 
