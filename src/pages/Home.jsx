@@ -12,17 +12,17 @@ export default function Home(){
     const [selectedTypes, setSelectedTypes] = useState(["All-Day", "Happy-Hour", "Brunch", "Lunch", "Dinner"])
     const types = ["All-Day", "Happy-Hour", "Brunch", "Lunch", "Dinner"]
     const [userLocation, setUserLocation] = useState(null);
-
     const todayIndex = new Date().getDay();
     const daysOfWeek = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
     const today = daysOfWeek[todayIndex];
     const [selectedDay, setSelectedDay] = useState({ day: today, index: 0 })
     const [loading, setLoading] = useState(null)
     const [limit, setLimit] = useState(5)
+    
 
-    useEffect(() => {
-        GetUserLocation(setUserLocation);
-    }, []);
+/*     useEffect(() => {
+        GetUserLocation(setUserLocation, setLocationDenied);
+    }, []); */
 
     useEffect(() => {
         if (selectedTypes.length > 0){
@@ -78,9 +78,14 @@ export default function Home(){
     }
 
     function getDirections(name, address){
-        window.open(`https://maps.google.com?q=${name}, ${address}` );
+        const sanitizedName = name.replace(/[^a-zA-Z0-9\s]/g, '').trim(); // Keeps only alphanumeric characters and spaces
+
+        window.open(`https://maps.google.com?q=${sanitizedName}, ${address}` );
     }
 
+    function handleEnableLocation() {
+        GetUserLocation(setUserLocation);
+    }
 
     return (
         <>
@@ -108,7 +113,10 @@ export default function Home(){
                     <div className="text-center">Finding amazing deals...</div>
                     :
                     <div className="flex flex-col items-center space-y-4">
-                    {deals.length > 0 && deals.map((deal) => (
+                        {!userLocation &&
+                            <button onClick={handleEnableLocation} className="text-sm text-blue-600 font-medium hover:underline">View by Location</button>
+                        }
+                        {deals.length > 0 && deals.map((deal) => (
                         <div 
                         key={deal._id} 
                         className="flex flex-col p-4 bg-gray-50 w-full border-2 rounded border-gray-700 shadow-md hover:cursor-pointer"

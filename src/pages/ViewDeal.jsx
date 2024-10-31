@@ -22,7 +22,9 @@ export default function ViewDeal(){
     }, [id]);
 
     function handleDirections(){
-        window.open(`https://maps.google.com?q=${deal.restaurant}, ${deal.address}` );
+        const sanitizedName = deal.restaurant.replace(/[^a-zA-Z0-9\s]/g, '').trim(); // Keeps only alphanumeric characters and spaces
+
+        window.open(`https://maps.google.com?q=${sanitizedName}, ${deal.address}` );
     }
 
     function handleExpired(){

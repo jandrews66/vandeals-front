@@ -12,10 +12,12 @@ export default function GetUserLocation(setUserLocation){
         const latitude = position.coords.latitude;
         const longitude = position.coords.longitude;
         setUserLocation([longitude, latitude]);
+
       }
       
       function error() {
         console.warn("User denied location access");
         setUserLocation(null)
+
       }
 }
