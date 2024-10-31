@@ -1,9 +1,11 @@
 import { useEffect, useState, useRef } from 'react';
+import { useNavigate } from "react-router-dom";
 
 export default function AdminDash() {
     const [deals, setDeals] = useState([]); 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [idToDelete, setIdToDelete] = useState('')
+    const navigate = useNavigate();
     useEffect(() => {
         fetch(`http://localhost:3000/deal/`, {
             mode: 'cors',
@@ -62,7 +64,11 @@ export default function AdminDash() {
                 <td className="border border-gray-300 px-4 py-1 whitespace-nowrap">{deal.restaurant}</td>
                 <td className="border border-gray-300 px-4 py-1 whitespace-nowrap">{deal.name}</td>
                 <td className="border border-gray-300 px-4 py-1 flex space-x-2">
-                  <button className="bg-blue-500 text-white px-3 py-1 rounded-md">
+                  <button 
+                    className="bg-blue-500 text-white px-3 py-1 rounded-md"
+                    onClick={()=>navigate(`/admin/edit/${deal._id}`)}
+
+                  >
                     Edit
                   </button>
                   <button 

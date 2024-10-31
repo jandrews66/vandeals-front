@@ -7,6 +7,8 @@ import Home from './pages/Home.jsx'
 import CreateDeal from './pages/CreateDeal.jsx'
 import ViewDeal from './pages/ViewDeal.jsx'
 import AdminDash from './pages/AdminDash.jsx'
+import EditDeal from './pages/EditDeal.jsx'
+
 
 const router = createBrowserRouter([
   {
@@ -28,6 +30,10 @@ const router = createBrowserRouter([
       {
         path: "/admin/dashboard",
         element: <AdminDash />,
+      },
+      {
+        path: "/admin/edit/:id",
+        element: <EditDeal />,
       },
     ],
   }
