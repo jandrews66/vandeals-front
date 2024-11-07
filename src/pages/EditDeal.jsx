@@ -1,5 +1,5 @@
 import DealForm from '../components/DealForm'
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from 'react';
 
 export default function EditDeal(){
@@ -8,6 +8,7 @@ export default function EditDeal(){
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
     const [successMessage, setSuccessMessage] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchDeal = async () => {
@@ -29,9 +30,18 @@ export default function EditDeal(){
 
     const handleUpdate = async (formData) => {
         try {
+            const token = localStorage.getItem('token')
+            if (!token) {
+                console.error('No token found')
+                localStorage.removeItem('token')
+                navigate('/login')
+            }
             const response = await fetch(`http://localhost:3000/deal/${id}/edit`, {
                 method: 'PUT',
-                headers: { 'Content-Type': 'application/json'},
+                headers: { 
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
                 body: JSON.stringify(formData),
             });
             if (!response.ok) throw new Error('Failed to update deal');

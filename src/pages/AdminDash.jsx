@@ -24,9 +24,16 @@ export default function AdminDash() {
       };
     
     const handleDelete = () => {
+        const token = localStorage.getItem('token')
+        if (!token) {
+            console.error('No token found')
+            localStorage.removeItem('token')
+            navigate('/login')
+        }
         fetch(`http://localhost:3000/deal/${idToDelete}/delete`, {
             method: 'DELETE',
             headers: {
+              'Authorization': `Bearer ${token}`,
               'Content-Type': 'application/json',
             },
           })
