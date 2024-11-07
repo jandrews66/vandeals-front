@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
+import SanitizedHtml from '../components/SanitzedHtml'
 
 export default function ViewDeal(){
     const { id } = useParams();
@@ -30,6 +31,7 @@ export default function ViewDeal(){
     function handleExpired(){
         
     }
+
     return (  
         <>
         {deal && (
@@ -54,17 +56,20 @@ export default function ViewDeal(){
                 </div>
                 <hr></hr>
                 <div className="py-4 text-xl font-semibold text-emerald-600">{deal.name}</div>
-                <div className="pb-8 text-base text-gray-800 leading-relaxed">{deal.description}</div>
-                <div className="pt-2 text-sm font-medium text-gray-600">
-                    Time Periods:
-                    {deal.time_periods.length > 0 && 
-                        deal.time_periods.map((period, index) => (
-                            <div key={index}>
-                                <div className="text-gray-800">{period.start} to {period.end}</div>
-                            </div>
-                        ))
-                    }
+                <div className="description-content text-base text-gray-800 list-disc list-inside">
+                    <SanitizedHtml htmlContent={deal.description} />
                 </div>
+
+                {deal.time_periods.length > 0 && (
+                        <div className="pt-2 text-sm font-medium text-gray-600">
+                    Time Periods:
+                    {deal.time_periods.map((period, index) => (
+                        <div key={index}>
+                            <div className="text-gray-800">{period.start} to {period.end}</div>
+                        </div>
+                    ))}
+                    </div>
+                )}
                 <div className="pt-2 text-sm font-medium text-gray-600">
                     <span className="text-gray-800">Type:</span> {deal.type}
                 </div>

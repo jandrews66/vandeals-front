@@ -2,6 +2,8 @@ import { useState, } from 'react'
 import { usePlacesWidget } from "react-google-autocomplete";
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 export default function DealForm({ onSubmit, initialData = {} }){
     const googleKey = import.meta.env.VITE_GOOGLE_API_KEY
@@ -127,6 +129,14 @@ export default function DealForm({ onSubmit, initialData = {} }){
             onSubmit(formData);
           };
 
+        const customModules = {
+            toolbar: [
+                [{ header: [1, 2, false] }],
+                ['bold', 'italic', 'underline'],
+                [{'list': 'ordered'}, {'list': 'bullet'},],
+              ],
+        }
+
     return(
         <div>
             <form className="space-y-4 max-w-2xl mx-auto p-4 bg-white shadow-md rounded-md" onSubmit={handleSubmit}>
@@ -185,14 +195,25 @@ export default function DealForm({ onSubmit, initialData = {} }){
                 </div>
                 <div>
                     <label htmlFor="description" className="block text-sm font-medium text-gray-700">Description:</label>
-                    <textarea
+{/*                     <textarea
                         id="description"
                         value={description}
                         className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm "
                         onChange={(e) => setDescription(e.target.value)}
+                        maxLength="999"
+                        rows="8"
                         >
-                    </textarea>
+                    </textarea> */}
+                    <ReactQuill
+                        id="description"
+                        value={description}
+                        onChange={setDescription} 
+                        placeholder="Enter deal description"
+                        maxLength="999"
+                        modules={customModules}
+                    />
                 </div>
+
                 <div>
                     <label className="block text-sm font-medium text-gray-700">Valid On:</label>
                     <ul className="flex flex-wrap gap-4 mt-2">

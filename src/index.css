@@ -1,3 +1,17 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.description-content ul {
+    list-style-type: disc; /* Ensures bullets */
+    padding-left: 1.5rem;  /* Indents bullet points */
+}
+
+.description-content ol {
+    list-style-type: decimal; /* Ensures numbering */
+    padding-left: 1.5rem;
+}
+
+.description-content li {
+   /* margin-bottom: 0.5rem;  Adds spacing between items */
+}

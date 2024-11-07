@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from "react-router-dom";
-
 import GetUserLocation from '../components/GetUserLocation.jsx'
 import { getDistance } from 'geolib';
 import DayPicker from '../components/DayPicker.jsx'
 import Logo from '../components/Logo.jsx'
+import SanitizedHtml from '../components/SanitzedHtml'
 
 export default function Home(){
     const navigate = useNavigate();
@@ -119,10 +119,10 @@ export default function Home(){
                         {deals.length > 0 && deals.map((deal) => (
                         <div 
                         key={deal._id} 
-                        className="flex flex-col p-4 bg-gray-50 w-full border-2 rounded border-gray-700 shadow-md hover:cursor-pointer"
+                        className="flex flex-col p-4 bg-gray-50 w-full max-w-[480px] md:w-[4800px] border-2 rounded border-gray-700 shadow-md hover:cursor-pointer"
                         onClick={() => handleNavigate(deal._id)}
                         >
-                            <div className="flex gap-12 justify-between">
+                            <div className="flex justify-between">
                                 <div className="font-semibold text-teal-600">{deal.restaurant}</div>
                                 <div 
                                     className="text-sm text-right text-blue-600 hover:underline"
@@ -133,8 +133,10 @@ export default function Home(){
 
                             </div>
 
-                            <div className="font-semibold text-gray-600">{deal.name}</div>
-                            <div className="p-2 text-sm text-gray-600">{deal.description}</div>
+                            <div className="pb-2 font-semibold text-gray-600">{deal.name}</div>
+                            <div className="text-sm text-gray-600 overflow-hidden line-clamp-4">
+                                <SanitizedHtml htmlContent={deal.description} />
+                            </div>
 
                         </div>
                     ))}
