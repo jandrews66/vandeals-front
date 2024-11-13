@@ -5,6 +5,7 @@ import { getDistance } from 'geolib';
 import DayPicker from '../components/DayPicker.jsx'
 import Logo from '../components/Logo.jsx'
 import SanitizedHtml from '../components/SanitzedHtml'
+import LocationModal from '../components/Modal.jsx'
 
 export default function Home(){
     const navigate = useNavigate();
@@ -18,22 +19,18 @@ export default function Home(){
     const [selectedDay, setSelectedDay] = useState({ day: today, index: 0 })
     const [loading, setLoading] = useState(null)
     const [limit, setLimit] = useState(5)
+    const [latlng, setLatlng] = useState({ lat: 49.28204, lng: -123.1171})
     
-
-/*     useEffect(() => {
-        GetUserLocation(setUserLocation, setLocationDenied);
-    }, []); */
 
     useEffect(() => {
         if (selectedTypes.length > 0){
 
             setLoading(true)
-
             const typesQuery = selectedTypes.join(',');
             const { day, index } = selectedDay;
-            const locationQuery = userLocation ? `&location=${userLocation}` : '';
+            const locationQuery = `${latlng.lng}, ${latlng.lat}`
 
-            fetch(`http://localhost:3000/deal/todays?types=${typesQuery}${locationQuery}&day=${day}&index=${index}&limit=${limit}`)
+            fetch(`http://localhost:3000/deal/todays?types=${typesQuery}&location=${locationQuery}&day=${day}&index=${index}&limit=${limit}`)
             .then((response) => response.json())
             .then((data) => {
                 setDeals(data)
@@ -46,7 +43,7 @@ export default function Home(){
             setDeals([]);
         }
 
-    }, [selectedTypes, userLocation, selectedDay, limit]);
+    }, [selectedTypes, userLocation, selectedDay, limit, latlng.lng, latlng.lat]);
 
     function handleCheck(type){
         setSelectedTypes((prevTypes) => {
@@ -63,14 +60,11 @@ export default function Home(){
     }
 
     function calcDistance(dealCoords) {
-        if (userLocation) {
-            const result = getDistance(userLocation, dealCoords);
-            const resultKms = (result / 1000).toFixed(1); 
+        const lnglat = [latlng.lng, latlng.lat];
+        const result = getDistance(lnglat, dealCoords);
+        const resultKms = (result / 1000).toFixed(1); 
 
-            return `${resultKms} km away`; // Add units for better readability
-        } else {
-            return '? km away'
-        }   
+        return `${resultKms} km away`; // Add units for better readability 
     }
 
     function handleNavigate(id){
@@ -83,14 +77,13 @@ export default function Home(){
         window.open(`https://maps.google.com?q=${sanitizedName}, ${address}` );
     }
 
-    function handleEnableLocation() {
-        GetUserLocation(setUserLocation);
-    }
+
 
     return (
         <>
         <div className="flex flex-col items-center px-10 py-2">
             <Logo />
+            <LocationModal latlng={latlng} setLatlng={setLatlng}/>
             <DayPicker selectedDay={selectedDay} setSelectedDay={setSelectedDay} daysOfWeek={daysOfWeek}/>
             <div className="py-2">
                 <ul className="flex gap-2 py-2">
@@ -113,9 +106,6 @@ export default function Home(){
                     <div className="text-center">Finding amazing deals...</div>
                     :
                     <div className="flex flex-col items-center space-y-4">
-                        {!userLocation &&
-                            <button onClick={handleEnableLocation} className="text-sm text-blue-600 font-medium hover:underline">View by Location</button>
-                        }
                         {deals.length > 0 && deals.map((deal) => (
                         <div 
                         key={deal._id} 
