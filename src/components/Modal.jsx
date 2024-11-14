@@ -25,7 +25,8 @@ const style = {
   border: '2px solid #000',
   boxShadow: 24,
   p: 2,
-  m: 0
+  m: 0,
+  borderRadius: '5px'
 };
 
 export default function LocationModal({latlng, setLatlng}) {
@@ -33,6 +34,7 @@ export default function LocationModal({latlng, setLatlng}) {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [markerRef, marker] = useMarkerRef();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (!marker) return;
@@ -56,14 +58,12 @@ export default function LocationModal({latlng, setLatlng}) {
   }, [marker, setLatlng]);
 
   function handleEnableLocation() {
-    GetUserLocation(setLatlng);
+    GetUserLocation(setLatlng, setLoading);
 }
 
   return (
     <div>
-    <div className="w-full flex ml-auto justify-end">
-    <img onClick={handleOpen} className="mb-4 border-2 rounded border-gray-700 cursor-pointer hover:brightness-90" src="src/assets/vanMap.png"></img>
-    </div>
+    <button onClick={handleOpen} className="py-1 px-2 border-2 rounded border-gray-700 bg-blue-400 hover:bg-pink-400 text-gray-800 text-sm font-semibold whitespace-nowrap">Edit Location</button>
     <Modal
         open={open}
         onClose={handleClose}
@@ -73,11 +73,11 @@ export default function LocationModal({latlng, setLatlng}) {
         <Box sx={style}>
         <APIProvider apiKey={googleKey}>
           <div className="flex flex-col items-center mb-2">
-            <button onClick={handleEnableLocation} className="text-sm text-blue-600 font-medium hover:underline">Use my current location</button>
+            {loading ? <p className="text-sm font-medium ">Gathering location data... </p> : <button onClick={handleEnableLocation} className="text-sm text-blue-600 font-medium hover:underline">Use my current location</button> }
             <p className="text-sm">Or drag marker to set location on the map</p>
 
           </div>
-          <div className="h-[calc(100%-50px)] border border-gray-300 overflow-hidden"> {/* Adjusts height */}
+          <div className="h-[calc(100%-50px)] border-2 rounded border-gray-200 overflow-hidden"> {/* Adjusts height */}
               <Map
                 style={{ width: '100%', height: '100%' }}
                 defaultCenter={{ lat: 49.28204, lng: -123.1171 }}

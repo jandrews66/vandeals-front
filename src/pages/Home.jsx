@@ -81,25 +81,30 @@ export default function Home(){
 
     return (
         <>
-        <div className="flex flex-col items-center px-10 py-2">
+        <div className="flex flex-col items-center sm:px-10 px-2 pt-2">
             <Logo />
-            <LocationModal latlng={latlng} setLatlng={setLatlng}/>
-            <DayPicker selectedDay={selectedDay} setSelectedDay={setSelectedDay} daysOfWeek={daysOfWeek}/>
-            <div className="py-2">
-                <ul className="flex gap-2 py-2">
+
+            <div className="p-1 mb-4 border-2 rounded border-gray-700">
+                <ul className="sm:flex sm:gap-3 grid grid-cols-2 gap-1 items-center">
                     {types.map((type, index) => (
-                        <li key={index}>
-                            <label className="mr-1 text-sm">{type}</label>
+                        <li key={index} className="flex items-center">
                             <input 
                                 type="checkbox"
                                 name="type"
                                 checked={checkedInput(type)}
-                                onChange={()=>handleCheck(type)}
-                            >
-                            </input>
+                                onChange={() => handleCheck(type)}
+                                className="mx-1 hover:cursor-pointer" 
+                            />
+                            <label className="font-semibold text-gray-700 text-sm whitespace-nowrap">
+                                {type}
+                            </label>
                         </li>
                     ))}
                 </ul>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-4 sm:gap-10 items-center mb-4">
+                <DayPicker selectedDay={selectedDay} setSelectedDay={setSelectedDay} daysOfWeek={daysOfWeek}/>
+                <LocationModal latlng={latlng} setLatlng={setLatlng}/>
             </div>
             <div className="">
                 {loading ? 
