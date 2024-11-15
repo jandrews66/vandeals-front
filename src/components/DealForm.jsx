@@ -4,6 +4,8 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import DOMPurify from 'dompurify'; // Import DOMPurify for sanitizing HTML input
+
 
 export default function DealForm({ onSubmit, initialData = {} }){
     const googleKey = import.meta.env.VITE_GOOGLE_API_KEY
@@ -23,43 +25,6 @@ export default function DealForm({ onSubmit, initialData = {} }){
 
     
     const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-/* 
-    const handleSubmit = async (e) => {
-        e.preventDefault()
-
-        if (!coords.length) {
-            console.error("Address error. Please enter a location");
-            return;
-        }
-        const formData = {
-            name,
-            type,
-            restaurant: restaurantName,
-            address: restaurantAddress,
-            description,
-            start_date: startDate,
-            end_date: endDate,
-            days,
-            coords,
-            time_periods: timePeriods
-        }
-        console.log(formData)
-
-        const response = await fetch('http://localhost:3000/deal/create', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(formData)
-        });
-
-        const data = await response.json();
-        if (response.ok){
-            console.log('deal create' + data)
-        } else {
-            console.log('creation failed' + data)
-        }
-    } */
 
     const handleCheck = (day) => {
         setDays((prevDays) => {
@@ -118,13 +83,15 @@ export default function DealForm({ onSubmit, initialData = {} }){
         
         const handleSubmit = (e) => {
             e.preventDefault();
+            const sanitizedDescription = DOMPurify.sanitize(description);
+
             if (!coords.length) {
               console.error("Address error. Please enter a location");
               return;
             }
             const formData = {
               name, type, restaurant: restaurantName, address: restaurantAddress,
-              description, start_date: startDate, end_date: endDate, days, coords, time_periods: timePeriods
+              description: sanitizedDescription, start_date: startDate, end_date: endDate, days, coords, time_periods: timePeriods
             };
             onSubmit(formData);
           };
@@ -134,7 +101,12 @@ export default function DealForm({ onSubmit, initialData = {} }){
                 [{ header: [1, 2, false] }],
                 ['bold', 'italic', 'underline'],
                 [{'list': 'ordered'}, {'list': 'bullet'},],
-              ],
+                [{ 'color': [] }],
+                [{ 'align': [] }] , 
+            ],
+            clipboard: {
+                matchVisual: false, // Ensures plain text formatting on paste
+              }
         }
 
     return(
@@ -195,15 +167,6 @@ export default function DealForm({ onSubmit, initialData = {} }){
                 </div>
                 <div>
                     <label htmlFor="description" className="block text-sm font-medium text-gray-700">Description:</label>
-{/*                     <textarea
-                        id="description"
-                        value={description}
-                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm "
-                        onChange={(e) => setDescription(e.target.value)}
-                        maxLength="999"
-                        rows="8"
-                        >
-                    </textarea> */}
                     <ReactQuill
                         id="description"
                         value={description}
@@ -244,14 +207,6 @@ export default function DealForm({ onSubmit, initialData = {} }){
                         <div key={index} className="flex gap-2 mb-2">
                             <div>
                                 <label className="block text-sm font-medium text-gray-700">Start Time:</label>
-{/*                                 <input
-                                    type="time"
-                                    onClick={(e) => e.target.showPicker()}
-                                    value={period.start}
-                                    onChange={(e) => handleTimeChange(index, 'start', e.target.value)}
-                                    className="mt-1 block px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-
-                                ></input> */}
                                 <DatePicker
                                     selected={period.start ? new Date(`1970-01-01T${period.start}`) : new Date(`1970-01-01T12:00`)} //selected expects date object
                                     onChange={(date) => handleTimeChange(index, 'start', date ? date.toTimeString().slice(0, 5) : '')} //trim to only use time from date object

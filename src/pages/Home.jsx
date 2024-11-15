@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from "react-router-dom";
-import GetUserLocation from '../components/GetUserLocation.jsx'
 import { getDistance } from 'geolib';
 import DayPicker from '../components/DayPicker.jsx'
 import Logo from '../components/Logo.jsx'
@@ -12,7 +11,6 @@ export default function Home(){
     const [deals, setDeals] = useState([])
     const [selectedTypes, setSelectedTypes] = useState(["All-Day", "Happy-Hour", "Brunch", "Lunch", "Dinner"])
     const types = ["All-Day", "Happy-Hour", "Brunch", "Lunch", "Dinner"]
-    const [userLocation, setUserLocation] = useState(null);
     const todayIndex = new Date().getDay();
     const daysOfWeek = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
     const today = daysOfWeek[todayIndex];
@@ -21,7 +19,6 @@ export default function Home(){
     const [limit, setLimit] = useState(5)
     const [latlng, setLatlng] = useState({ lat: 49.28204, lng: -123.1171})
     
-
     useEffect(() => {
         if (selectedTypes.length > 0){
 
@@ -43,7 +40,7 @@ export default function Home(){
             setDeals([]);
         }
 
-    }, [selectedTypes, userLocation, selectedDay, limit, latlng.lng, latlng.lat]);
+    }, [selectedTypes, selectedDay, limit, latlng.lng, latlng.lat]);
 
     function handleCheck(type){
         setSelectedTypes((prevTypes) => {

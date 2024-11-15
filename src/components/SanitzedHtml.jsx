@@ -1,18 +1,20 @@
+import React from 'react';
 import DOMPurify from 'dompurify';
 
-// Helper function to decode HTML entities
-function decodeHtmlEntities(text) {
-    const doc = new DOMParser().parseFromString(text, 'text/html');
-    return doc.documentElement.textContent || doc.documentElement.innerText;
-}
-
-// Reusable component to render sanitized HTML
 export default function SanitizedHtml({ htmlContent }) {
-    return (
-        <div
-            dangerouslySetInnerHTML={{
-                __html: DOMPurify.sanitize(decodeHtmlEntities(htmlContent))
-            }}
-        />
-    );
+  console.log("Raw HTML Content:", htmlContent); // Log raw content
+  
+  const sanitizedContent = DOMPurify.sanitize(htmlContent, {
+    ALLOWED_TAGS: ['p', 'br', 'ul', 'li', 'strong', 'em', 'a'], // Allow p, br, ul, li, strong, em, a tags
+  });
+  console.log("Sanitized HTML:", sanitizedContent); // Log sanitized content
+
+  return (
+    <div
+      className="description-content"
+      dangerouslySetInnerHTML={{
+        __html: sanitizedContent,
+      }}
+    />
+  );
 }

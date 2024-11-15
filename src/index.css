@@ -13,5 +13,14 @@
 }
 
 .description-content li {
-   /* margin-bottom: 0.5rem;  Adds spacing between items */
+    margin-bottom: 0.5rem; /* Adds spacing between list items */
+}
+
+.description-content p {
+    display: block; /* Ensures paragraphs are block-level elements */
+}
+
+.description-content {
+    white-space: normal;
+    white-space: pre-line; /* Keeps line breaks intact */
 }

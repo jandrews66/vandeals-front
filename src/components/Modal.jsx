@@ -39,18 +39,15 @@ export default function LocationModal({latlng, setLatlng}) {
   useEffect(() => {
     if (!marker) return;
 
-    // Set marker as draggable
     marker.setDraggable(true);
 
-    // Add an event listener to handle the drag end event
     marker.addListener('dragend', (event) => {
-/*       const newPosition = {
+      const newPosition = {
         lat: event.latLng.lat(),
         lng: event.latLng.lng()
-      }; */
-      setLatlng({ lat: event.latLng.lat(), lng: event.latLng.lng()})
+      };
+      setLatlng(newPosition);
     });
-    //setLatlng({ lat: newPosition.lat, lng: newPosition.lng });
 
     return () => {
       google.maps.event.clearListeners(marker, 'dragend');
