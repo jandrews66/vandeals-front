@@ -1,6 +1,5 @@
+import { useLocation } from '../contexts/LocationContext.jsx';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import { useEffect, useState } from 'react'
 import {
@@ -29,7 +28,9 @@ const style = {
   borderRadius: '5px'
 };
 
-export default function LocationModal({latlng, setLatlng}) {
+export default function LocationModal() {
+  const { location, setLocation } = useLocation(); // Get location from context
+
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -42,20 +43,16 @@ export default function LocationModal({latlng, setLatlng}) {
     marker.setDraggable(true);
 
     marker.addListener('dragend', (event) => {
-      const newPosition = {
-        lat: event.latLng.lat(),
-        lng: event.latLng.lng()
-      };
-      setLatlng(newPosition);
+      setLocation({ lat: event.latLng.lat(), lng: event.latLng.lng() });
     });
 
     return () => {
       google.maps.event.clearListeners(marker, 'dragend');
     };
-  }, [marker, setLatlng]);
+  }, [marker, setLocation]);
 
   function handleEnableLocation() {
-    GetUserLocation(setLatlng, setLoading);
+    GetUserLocation(setLocation, setLoading);
 }
 
   return (
@@ -82,7 +79,7 @@ export default function LocationModal({latlng, setLatlng}) {
                 gestureHandling="greedy"
                 disableDefaultUI={true}
               >
-                <Marker ref={markerRef} position={{ lat: latlng.lat, lng: latlng.lng }} />
+                <Marker ref={markerRef} position={{ lat: location.lat, lng: location.lng }} />
               </Map>
             </div>
         </APIProvider>        

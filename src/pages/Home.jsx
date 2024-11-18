@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from "react-router-dom";
 import { getDistance } from 'geolib';
+import { useLocation } from '../contexts/LocationContext.jsx';
 import DayPicker from '../components/DayPicker.jsx'
 import Logo from '../components/Logo.jsx'
 import SanitizedHtml from '../components/SanitzedHtml'
@@ -17,15 +18,15 @@ export default function Home(){
     const [selectedDay, setSelectedDay] = useState({ day: today, index: 0 })
     const [loading, setLoading] = useState(null)
     const [limit, setLimit] = useState(5)
-    const [latlng, setLatlng] = useState({ lat: 49.28204, lng: -123.1171})
-    
+    const { location, setLocation } = useLocation(); // Get location from context
+
     useEffect(() => {
         if (selectedTypes.length > 0){
 
             setLoading(true)
             const typesQuery = selectedTypes.join(',');
             const { day, index } = selectedDay;
-            const locationQuery = `${latlng.lng}, ${latlng.lat}`
+            const locationQuery = `${location.lng}, ${location.lat}`
 
             fetch(`http://localhost:3000/deal/todays?types=${typesQuery}&location=${locationQuery}&day=${day}&index=${index}&limit=${limit}`)
             .then((response) => response.json())
@@ -40,7 +41,7 @@ export default function Home(){
             setDeals([]);
         }
 
-    }, [selectedTypes, selectedDay, limit, latlng.lng, latlng.lat]);
+    }, [selectedTypes, selectedDay, limit, location]);
 
     function handleCheck(type){
         setSelectedTypes((prevTypes) => {
@@ -57,7 +58,7 @@ export default function Home(){
     }
 
     function calcDistance(dealCoords) {
-        const lnglat = [latlng.lng, latlng.lat];
+        const lnglat = [location.lng, location.lat];
         const result = getDistance(lnglat, dealCoords);
         const resultKms = (result / 1000).toFixed(1); 
 
@@ -101,7 +102,7 @@ export default function Home(){
             </div>
             <div className="flex flex-col sm:flex-row gap-4 sm:gap-10 items-center mb-4">
                 <DayPicker selectedDay={selectedDay} setSelectedDay={setSelectedDay} daysOfWeek={daysOfWeek}/>
-                <LocationModal latlng={latlng} setLatlng={setLatlng}/>
+                <LocationModal />
             </div>
             <div className="">
                 {loading ? 

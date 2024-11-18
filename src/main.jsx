@@ -10,6 +10,7 @@ import AdminDash from './pages/AdminDash.jsx'
 import EditDeal from './pages/EditDeal.jsx'
 import Login from './pages/Login.jsx'
 
+import { LocationProvider } from './contexts/LocationContext.jsx'; 
 
 const router = createBrowserRouter([
   {
@@ -46,6 +47,8 @@ const router = createBrowserRouter([
 ]);
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <LocationProvider>
+      <RouterProvider router={router} />
+    </LocationProvider>  
   </StrictMode>,
 )
