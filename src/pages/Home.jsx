@@ -18,7 +18,8 @@ export default function Home(){
     const [selectedDay, setSelectedDay] = useState({ day: today, index: 0 })
     const [loading, setLoading] = useState(null)
     const [limit, setLimit] = useState(5)
-    const { location, setLocation } = useLocation(); // Get location from context
+    const { location, setLocation } = useLocation(); // Get location from context\
+    const [error, setError] = useState(null)
 
     useEffect(() => {
         if (selectedTypes.length > 0){
@@ -34,14 +35,15 @@ export default function Home(){
                 setDeals(data)
                 setLoading(false)
             })
-            .catch((error) => {
-                console.error(error)
+            .catch((err) => {
+                setError(err)
+                setDeals([]);
             });
         } else {
             setDeals([]);
         }
 
-    }, [selectedTypes, selectedDay, limit, location]);
+    }, [selectedTypes, selectedDay, limit, location, error]);
 
     function handleCheck(type){
         setSelectedTypes((prevTypes) => {
@@ -109,7 +111,7 @@ export default function Home(){
                     <div className="text-center">Finding amazing deals...</div>
                     :
                     <div className="flex flex-col items-center space-y-4">
-                        {deals.length > 0 && deals.map((deal) => (
+                        {deals.length > 0 ? deals.map((deal) => (
                         <div 
                         key={deal._id} 
                         className="flex flex-col p-4 bg-gray-50 w-full max-w-[480px] md:w-[4800px] border-2 rounded border-gray-700 shadow-md hover:cursor-pointer"
@@ -132,10 +134,11 @@ export default function Home(){
                             </div>
 
                         </div>
-                    ))}
+                    )) : "No deals found for the selected filters."}
                     </div>
                 }
             </div>
+
             {deals.length >= limit &&
                 <button className="m-4 py-2 px-4 border-2 rounded border-gray-700 bg-blue-400 hover:bg-pink-400 text-gray-800 text-sm font-semibold" onClick={()=> setLimit(limit + limit)}>Show More</button>
             }

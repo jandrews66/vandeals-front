@@ -67,7 +67,14 @@ export default function LocationModal() {
         <Box sx={style}>
         <APIProvider apiKey={googleKey}>
           <div className="flex flex-col items-center mb-2">
-            {loading ? <p className="text-sm font-medium ">Gathering location data... </p> : <button onClick={handleEnableLocation} className="text-sm text-blue-600 font-medium hover:underline">Use my current location</button> }
+          <button
+            onClick={handleClose}
+            aria-label="Close"
+            className="absolute top-2 right-2 w-6 h-6 rounded-full bg-white text-gray-600 hover:text-red-600 text-lg font-semibold flex items-center justify-center"
+          >
+            &times;
+          </button> 
+          {loading ? <p className="text-sm font-medium ">Gathering location data... </p> : <button onClick={handleEnableLocation} className="text-sm text-blue-600 font-medium hover:underline">Use my current location</button> }
             <p className="text-sm">Or drag marker to set location on the map</p>
 
           </div>
