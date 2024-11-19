@@ -95,7 +95,10 @@ export default function Home(){
                                 onChange={() => handleCheck(type)}
                                 className="mx-1 hover:cursor-pointer" 
                             />
-                            <label className="font-semibold text-gray-700 text-sm whitespace-nowrap">
+                            <label 
+                                onClick={()=> handleCheck(type)}
+                                className="font-semibold text-gray-700 text-sm whitespace-nowrap hover:cursor-pointer"
+                                >
                                 {type}
                             </label>
                         </li>

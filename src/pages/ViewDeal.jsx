@@ -6,7 +6,7 @@ import SanitizedHtml from '../components/SanitzedHtml'
 export default function ViewDeal(){
     const { id } = useParams();
     const [deal, setDeal] = useState(null); 
-
+    const navigate = useNavigate();
     useEffect(() => {
         fetch(`${import.meta.env.VITE_API_URL}/deal/${id}`, {
             mode: 'cors',
@@ -30,6 +30,7 @@ export default function ViewDeal(){
 
     return (  
         <>
+        <button onClick={() => navigate(-1)}>Go Back</button>
         {deal && (
             <div className="max-w-xl mx-auto bg-white shadow-md rounded-lg p-6">
                 <div className="flex items-center justify-between">
