@@ -6,8 +6,9 @@ import {
   APIProvider,
   Map,
   Marker,
-  useMarkerRef
-} from '@vis.gl/react-google-maps';const googleKey = import.meta.env.VITE_GOOGLE_API_KEY
+  useMarkerRef,
+} from '@vis.gl/react-google-maps';
+const googleKey = import.meta.env.VITE_GOOGLE_API_KEY
 import GetUserLocation from '../components/GetUserLocation.jsx'
 
 

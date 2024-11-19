@@ -38,13 +38,6 @@ export default function ViewDeal(){
             <div className="max-w-xl mx-auto bg-white shadow-md rounded-lg p-6">
                 <div className="flex items-center justify-between">
                     <div className="text-xl text-gray-800">{deal.restaurant}</div>
-            
-                    <div 
-                        className="text-xs font-medium text-red-600 cursor-pointer hover:underline"
-                        onClick={handleExpired}
-                        >
-                        Something wrong?
-                    </div>
                 </div>
                 <div>
                     <div
@@ -59,37 +52,35 @@ export default function ViewDeal(){
                 <div className="description-content text-base text-gray-800 list-disc list-inside">
                     <SanitizedHtml htmlContent={deal.description} />
                 </div>
-
+                <hr className="my-4"></hr>
+                <div className="text-sm font-medium text-gray-700">
+                    <span className="text-gray-500 font-normal">Available on:</span> 
+                    <p>{deal.days.join(', ')}</p>
+                </div>
+        
                 {deal.time_periods.length > 0 && (
-                        <div className="pt-2 text-sm font-medium text-gray-600">
-                    Time Periods:
+                    <div className="pt-2 text-sm  text-gray-500">
+                    Valid from:
                     {deal.time_periods.map((period, index) => (
                         <div key={index}>
-                            <div className="text-gray-800">{period.start} to {period.end}</div>
+                            <div className="font-medium text-gray-700">{period.start} to {period.end}</div>
                         </div>
                     ))}
                     </div>
                 )}
-                <div className="pt-2 text-sm font-medium text-gray-600">
-                    <span className="text-gray-800">Type:</span> {deal.type}
-                </div>
         
-                <div className="text-sm font-medium text-gray-600">
-                    <span className="text-gray-800">Days:</span> {deal.days.join(', ')}
-                </div>
-        
-                <div className="text-sm font-medium text-gray-600">
-                {deal.end_date ? (
-                    <span className="text-gray-800">
-                    Deal ends on {format(new Date(deal.end_date), 'dd MMM yyyy')}
-                    </span>
-                ) : (
-                    'No end date specified'
-                )}
 
-                <div className="pt-4 text-xs font-medium text-gray-600">
-                <span className="text-gray-800">Terms and conditions apply. Contact restaurant for details.</span>
+                <div className="text-sm font-medium text-gray-500">
+                    {deal.end_date ? (
+                        <span className="text-gray-700">
+                        Deal ends on {format(new Date(deal.end_date), 'dd MMM yyyy')}
+                        </span>
+                    ) : (
+                        ''
+                    )}
                 </div>
+                <div className="pt-4 text-xs text-gray-600">
+                        Terms and conditions apply. Contact restaurant for details 
                 </div>
             </div>
         )}
