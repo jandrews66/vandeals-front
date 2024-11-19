@@ -8,7 +8,7 @@ export default function ViewDeal(){
     const [deal, setDeal] = useState(null); 
 
     useEffect(() => {
-        fetch(`http://localhost:3000/deal/${id}`, {
+        fetch(`${import.meta.env.VITE_API_URL}/deal/${id}`, {
             mode: 'cors',
             dataType: 'json'
         })
@@ -26,10 +26,6 @@ export default function ViewDeal(){
         const sanitizedName = deal.restaurant.replace(/[^a-zA-Z0-9\s]/g, '').trim(); // Keeps only alphanumeric characters and spaces
 
         window.open(`https://maps.google.com?q=${sanitizedName}, ${deal.address}` );
-    }
-
-    function handleExpired(){
-        
     }
 
     return (  

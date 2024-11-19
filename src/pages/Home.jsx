@@ -29,7 +29,7 @@ export default function Home(){
             const { day, index } = selectedDay;
             const locationQuery = `${location.lng}, ${location.lat}`
 
-            fetch(`http://localhost:3000/deal/todays?types=${typesQuery}&location=${locationQuery}&day=${day}&index=${index}&limit=${limit}`)
+            fetch(`${import.meta.env.VITE_API_URL}/deal/todays?types=${typesQuery}&location=${locationQuery}&day=${day}&index=${index}&limit=${limit}`)
             .then((response) => response.json())
             .then((data) => {
                 setDeals(data)

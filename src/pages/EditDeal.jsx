@@ -13,7 +13,7 @@ export default function EditDeal(){
     useEffect(() => {
         const fetchDeal = async () => {
             try {
-                const response = await fetch(`http://localhost:3000/deal/${id}`);
+                const response = await fetch(`${import.meta.env.VITE_API_URL}/deal/${id}`);
                 if (!response.ok) throw new Error('Failed to fetch deal');
                 const data = await response.json();
                 setDealData(data)
@@ -36,7 +36,7 @@ export default function EditDeal(){
                 localStorage.removeItem('token')
                 navigate('/login')
             }
-            const response = await fetch(`http://localhost:3000/deal/${id}/edit`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/deal/${id}/edit`, {
                 method: 'PUT',
                 headers: { 
                     'Authorization': `Bearer ${token}`,

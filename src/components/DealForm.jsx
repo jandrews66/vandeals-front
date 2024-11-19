@@ -42,7 +42,7 @@ export default function DealForm({ onSubmit, initialData = {} }){
             console.log(place)
             const address = place.formatted_address || place.address_components?.[0]?.long_name || "Unknown address";
             const inputValue = ref.current.value;
-                  // Extract the name before the first comma
+            // Extract the name before the first comma
             const name = inputValue.split(',')[0].trim();
             setRestaurantName(name);
             setRestaurantAddress(address); 

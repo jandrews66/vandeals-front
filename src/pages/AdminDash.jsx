@@ -6,17 +6,32 @@ export default function AdminDash() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [idToDelete, setIdToDelete] = useState('')
     const navigate = useNavigate();
+
     useEffect(() => {
-        fetch(`http://localhost:3000/deal/`, {
-            mode: 'cors',
-            dataType: 'json',
-    })
-        .then((response) => response.json())
-        .then((data) => setDeals(data))
-        .catch((error) => {
-            console.error(error);
-        });
-    }, []);
+      const fetchDeals = async () => {
+        const token = localStorage.getItem('token')
+        if (!token) {
+          localStorage.removeItem("token");
+          navigate("/login");
+          return;
+        }
+          try {
+          const response = await fetch(`${import.meta.env.VITE_API_URL}/deal/`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          if (response.status === 401) {
+            navigate("/login");
+            return;
+          }
+          const data = await response.json();
+          setDeals(data);
+        } catch (error) {
+          console.error("Error fetching deals:", error);
+        }
+      };
+  
+      fetchDeals();
+    }, [navigate]);
 
     const toggleModal = (id) => {
         setIsModalOpen(!isModalOpen);
@@ -30,7 +45,7 @@ export default function AdminDash() {
             localStorage.removeItem('token')
             navigate('/login')
         }
-        fetch(`http://localhost:3000/deal/${idToDelete}/delete`, {
+        fetch(`${import.meta.env.VITE_API_URL}/deal/${idToDelete}/delete`, {
             method: 'DELETE',
             headers: {
               'Authorization': `Bearer ${token}`,
@@ -52,7 +67,6 @@ export default function AdminDash() {
     return (
     <div className="max-w-4xl mx-auto p-2">
       <h1 className="text-2xl font-bold text-center mb-6">Admin Dashboard</h1>
-
       <table className="w-full table-auto border-collapse border border-gray-300 shadow-lg rounded-lg">
         <thead>
           <tr className="bg-gray-200 text-left">
