@@ -30,9 +30,17 @@ export default function ViewDeal(){
 
     return (  
         <>
-        <button onClick={() => navigate(-1)}>Go Back</button>
+
         {deal && (
-            <div className="max-w-xl mx-auto bg-white shadow-md rounded-lg p-6">
+            <div className="max-w-xl mx-auto">
+                <button 
+                    onClick={() => navigate(-1)}
+                    className="my-2 py-1 px-2 border-2 rounded border-gray-700 bg-teal-500 hover:bg-pink-400 text-gray-800 text-xs font-semibold" 
+                    >
+                    Go Back
+                </button>
+                <div className=" bg-gray-50 shadow-md rounded p-6 border-2  border-gray-700">
+
                 <div className="flex items-center justify-between">
                     <div className="text-xl text-gray-800">{deal.restaurant}</div>
                 </div>
@@ -78,6 +86,7 @@ export default function ViewDeal(){
                 </div>
                 <div className="pt-4 text-xs text-gray-600">
                         Terms and conditions apply. Contact restaurant for details 
+                </div>
                 </div>
             </div>
         )}

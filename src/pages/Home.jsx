@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation as useRouterLocation } from "react-router-dom";
 import { getDistance } from 'geolib';
 import { useLocation } from '../contexts/LocationContext.jsx';
 import DayPicker from '../components/DayPicker.jsx'
@@ -9,6 +9,7 @@ import LocationModal from '../components/Modal.jsx'
 
 export default function Home(){
     const navigate = useNavigate();
+    const routerLocation = useRouterLocation(); // To read the current URL
     const [deals, setDeals] = useState([])
     const [selectedTypes, setSelectedTypes] = useState(["All-Day", "Happy-Hour", "Brunch", "Lunch", "Dinner"])
     const types = ["All-Day", "Happy-Hour", "Brunch", "Lunch", "Dinner"]
@@ -44,6 +45,7 @@ export default function Home(){
         }
 
     }, [selectedTypes, selectedDay, limit, location, error]);
+
 
     function handleCheck(type){
         setSelectedTypes((prevTypes) => {
