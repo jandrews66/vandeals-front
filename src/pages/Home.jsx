@@ -9,7 +9,6 @@ import LocationModal from '../components/Modal.jsx'
 
 export default function Home(){
     const navigate = useNavigate();
-    const routerLocation = useRouterLocation(); // To read the current URL
     const [deals, setDeals] = useState([])
     const [selectedTypes, setSelectedTypes] = useState(["All-Day", "Happy-Hour", "Brunch", "Lunch", "Dinner"])
     const types = ["All-Day", "Happy-Hour", "Brunch", "Lunch", "Dinner"]

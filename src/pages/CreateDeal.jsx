@@ -13,7 +13,7 @@ export default function CreateDeal() {
 
         if (response.ok){
             console.log("Deal created")
-            //navigate('/')
+            navigate('/')
         } else {
             console.error('Error creating deal')
         }
